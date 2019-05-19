@@ -20,7 +20,7 @@ It aims to be:
 - Strongly typed.
   - It is written in Typescript and runs in the Deno runtime.
 - Functional.
-  - It eschews classes, inheritance, and decorators in favor of plain functions.
+  - It eschews mutation, inheritance, and decorators in favor of plain functions.
 - Data-driven.
   - It optimizes for common use cases when working with data: creating and modifying individual models, lists of models, related data from other models, and intersections of models.
 - Extensible with the language.

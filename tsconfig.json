@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitReturns": true,
+    "target": "esnext",
+    "lib": ["esnext"],
+    "baseUrl": ".",
+    "paths": {
+      "http://*": ["~/.deno/deps/http/*"],
+      "https://*": ["~/.deno/deps/https/*"]
+    },
+    "plugins": [{ "name": "deno_ls_plugin" }]
+  }
+}
