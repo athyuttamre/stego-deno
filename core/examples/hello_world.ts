@@ -1,4 +1,4 @@
-import { Server } from "../src/server.ts";
+import { Server } from "../mod.ts";
 
 const server = new Server(async () => {
   return "Hello, world.";
