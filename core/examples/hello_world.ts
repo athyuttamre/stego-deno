@@ -1,7 +1,11 @@
-import { Server } from "../mod.ts";
+import { Server, Request, Response } from "../mod.ts";
 
-const server = new Server(async () => {
-  return "Hello, world.";
-});
+async function index(req: Request) {
+  console.log(req);
+  return new Response({
+    body: req.body.value
+  });
+}
 
-server.listen(8080);
+const server = new Server(index);
+server.listen(3000);

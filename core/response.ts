@@ -1,73 +1,51 @@
 import { Status } from "https://deno.land/std@v0.12.0/http/http_status.ts";
 import { Response as ServerResponse } from "https://deno.land/std@v0.12.0/http/server.ts";
+import {
+  ResponseBody,
+  contentTypeForResponseBody,
+  encodeResponseBody
+} from "./body.ts";
 
-import { absurd } from "../lib/absurd.ts";
-
-interface Body {
-  type: "text";
-  value: string;
-}
-
-function bodyToServerResponseBody(
-  encoder: TextEncoder,
-  body: Body
-): Uint8Array {
-  return encoder.encode(body.value);
-}
-
-export interface ResponseParams {
-  status: Status;
-  body?: Body;
-}
+type ResponseParams = {
+  status?: Status;
+  headers?: { [header: string]: string };
+  body?: ResponseBody;
+};
 
 export class Response {
-  private _status: Status;
-  private _body?: Body;
-  private _encoder: TextEncoder;
+  status: Status;
+  headers: Headers;
+  body: ResponseBody | null;
 
   constructor(params: ResponseParams) {
-    const { status, body } = params;
-    this._status = status;
-    this._body = body;
-    this._encoder = new TextEncoder();
+    const { status, headers, body } = params;
+
+    // Set status
+    this.status = status || Status.OK;
+
+    // Set headers
+    this.headers = new Headers();
+    if (headers) {
+      for (let header in headers) {
+        this.headers.set(header, headers[header]);
+      }
+    }
+
+    // Set body
+    this.body = body || null;
+    if (this.body && !this.headers.get("Content-Type")) {
+      const contentType = contentTypeForResponseBody(this.body);
+      if (contentType) {
+        this.headers.set("Content-Type", contentType);
+      }
+    }
   }
 
   toServerResponse(): ServerResponse {
-    const headers = new Headers();
-    if (this._body) {
-      headers.set("Content-Type", "text/plain");
-    }
-
     return {
-      status: this._status,
-      headers: headers,
-      body: this._body
-        ? bodyToServerResponseBody(this._encoder, this._body)
-        : undefined
+      status: this.status,
+      headers: this.headers,
+      body: this.body ? encodeResponseBody(this.body) : undefined
     };
-  }
-}
-
-export type ResponseLike = Status | string | ResponseParams | Response;
-
-export function responseLikeToResponse(responseLike: ResponseLike): Response {
-  if (typeof responseLike === "number") {
-    return new Response({
-      status: responseLike
-    });
-  } else if (typeof responseLike === "string") {
-    return new Response({
-      status: Status.OK,
-      body: {
-        type: "text",
-        value: responseLike
-      }
-    });
-  } else if (responseLike instanceof Response) {
-    return responseLike;
-  } else if (typeof responseLike === "object") {
-    return new Response(responseLike);
-  } else {
-    return absurd(responseLike);
   }
 }
