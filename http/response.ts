@@ -25,6 +25,7 @@ export class Response {
 
     this.status = status || Status.OK;
     this.headers = headers || new Headers();
+    // TODO: no way to pass an empty body?
     this.body = body || (STATUS_TEXT.get(this.status) as string);
 
     if (this.body && !this.headers.get("content-type")) {
