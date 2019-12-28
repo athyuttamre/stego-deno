@@ -1,4 +1,4 @@
-import { Handler } from "../http/handler.ts";
+import { Handler } from "./handler.ts";
 
 export type Middleware = (next: Handler) => Handler;
 

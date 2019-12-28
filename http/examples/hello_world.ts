@@ -1,7 +1,8 @@
 import { Server, Response } from "../mod.ts";
 
-const server = new Server(async () => {
+const handler = async () => {
   return new Response({ body: "Hello, world." });
-});
+};
 
+const server = new Server(handler);
 server.listen(3000);

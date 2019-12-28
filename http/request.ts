@@ -28,8 +28,8 @@ export class Request {
     serverRequest: ServerRequest
   ): Promise<Request> {
     const method = parseMethod(serverRequest.method);
-    // TODO: find origin from serverRequest
-    const url = `http://localhost${serverRequest.url}`;
+    const host = serverRequest.headers.get("Host") || "localhost";
+    const url = `http://${host}${serverRequest.url}`;
     const headers = serverRequest.headers;
     const body = async () => serverRequest.body();
 

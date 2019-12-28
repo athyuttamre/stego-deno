@@ -2,7 +2,7 @@
 export type Json = string | number | boolean | null | JsonObject | JsonArray;
 
 interface JsonObject {
-  [property: string]: Json;
+  [property: string]: Json | undefined;
 }
 
 interface JsonArray extends Array<Json> {}

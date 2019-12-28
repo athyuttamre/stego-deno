@@ -20,8 +20,8 @@ export class Response {
   headers: Headers;
   body: ResponseBody;
 
-  constructor(params: ResponseParams) {
-    const { status, headers, body } = params;
+  constructor(params?: ResponseParams) {
+    const { status, headers, body } = params || {};
 
     this.status = status || Status.OK;
     this.headers = headers || new Headers();
